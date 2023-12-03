@@ -7,13 +7,17 @@ import pandas as pd
 import time
 
 def load_and_preprocess_data(file_path):
-    '''Load and preprocess data'''
+
+    '''This functions Load and preprocess data'''
+
     data = pd.read_csv(file_path)
     data['text'] = data['Headline'] + " " + data['Description'] + " " + data['Article text']
     return data
 
 def create_graph(data, threshold):
-    '''Create graph from data'''
+
+    ''' This function is used to Create graph from data'''
+
     G = nx.Graph()
     # Add nodes
     for idx in data['Index']:
@@ -30,7 +34,9 @@ def create_graph(data, threshold):
     return G
 
 def louvain_modularity_optimized(G):
-    '''Louvain Modularity Optimized'''
+
+    '''This function is used to Louvain Modularity Optimized'''
+
     A_sparse = nx.adjacency_matrix(G)
     m = G.size(weight='weight')
     degrees = dict(G.degree(weight='weight'))
@@ -70,7 +76,9 @@ def louvain_modularity_optimized(G):
     return {node: current_partition[node] for node in G.nodes()}
 
 def calculate_modularity_optimized(G, partition, A, m, degrees):
+
     '''Calculate modularity based on partition'''
+
     modularity = 0.0
     node_index = {node: idx for idx, node in enumerate(G.nodes())}
 
@@ -82,7 +90,9 @@ def calculate_modularity_optimized(G, partition, A, m, degrees):
     return modularity / (2 * m)
 
 def plot_clusters(clusters, G):
-    '''Plot clusters'''
+
+    '''This function is used to Plot clusters'''
+
     i = 0
     for cluster_id, nodes in clusters.items():
         subgraph = G.subgraph(nodes)
@@ -99,7 +109,9 @@ def plot_clusters(clusters, G):
         plt.show()
 
 def louvain_modularity_wrapper(file_path, threshold = 0.32):
-    '''Wrapper for Louvain Modularity without library'''
+
+    '''This function is used as a Wrapper for Louvain Modularity without library'''
+
     start_time = time.time()
 
     data = load_and_preprocess_data(file_path)
@@ -122,7 +134,9 @@ def louvain_modularity_wrapper(file_path, threshold = 0.32):
     plot_clusters(clusters, G)
 
 def louvainModularityLib(file_path):
-    '''Louvain Modularity with library'''
+
+    '''This function is Louvain Modularity with library'''
+
     data = pd.read_csv(file_path)
 
     data['text'] = data['Headline'] + " " + data['Description'] + " " + data['Article text']

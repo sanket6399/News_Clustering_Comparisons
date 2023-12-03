@@ -9,11 +9,17 @@ from sklearn.metrics.pairwise import cosine_similarity
 import time
 
 def load_and_preprocess_data(file_path):
+
+    '''This function loads and preprocesses data to be used for clustering'''
+
     data = pd.read_csv(file_path)
     data['text'] = data['Headline'] + " " + data['Description'] + " " + data['Article text']
     return data
 
 def create_networkx_graph(cosine_sim, threshold):
+
+    '''Create NetworkX graph from cosine similarity matrix'''
+
     G = nx.Graph()
     for i in range(len(cosine_sim)):
         for j in range(i + 1, len(cosine_sim)):
@@ -22,6 +28,9 @@ def create_networkx_graph(cosine_sim, threshold):
     return G
 
 def convert_to_igraph(G):
+
+    ''' This function converts NetworkX graph to iGraph graph'''
+
     nx_matrix = nx.to_numpy_array(G)
     sources, targets = np.where(nx_matrix != 0)
     weights = nx_matrix[sources, targets]
@@ -30,6 +39,9 @@ def convert_to_igraph(G):
     return igraph_graph
 
 def apply_leiden_algorithm(igraph_graph):
+
+    '''This function applies Leiden algorithm to the iGraph graph'''
+
     start_time = time.time()
     partition = leidenalg.find_partition(igraph_graph, leidenalg.ModularityVertexPartition, weights='weight')
     end_time = time.time()
@@ -38,6 +50,9 @@ def apply_leiden_algorithm(igraph_graph):
     return partition
 
 def plot_clusters(clusters, G):
+
+    '''This function plots the clusters'''
+
     i = 0
     for cluster_id, nodes in clusters.items():
         subgraph = G.subgraph(nodes)
@@ -53,7 +68,10 @@ def plot_clusters(clusters, G):
         i += 1
         plt.show()
 
-def main(file_path, threshold):
+def base_function(file_path, threshold):
+
+    '''This is the base function that calls all other functions'''
+
     # Load and preprocess data
     data = load_and_preprocess_data(file_path)
 
@@ -82,6 +100,9 @@ def main(file_path, threshold):
     plot_clusters(clusters_info, G)
 
 if __name__ == '__main__':
+
+    '''This is the main function'''
+
     file_path = r'C:\Users\Checkout\Desktop\CS255_Project\News_Clustering_Comparisons\Dataset\input_file.csv'
     threshold = 0.3
-    main(file_path, threshold)
+    base_function(file_path, threshold)
