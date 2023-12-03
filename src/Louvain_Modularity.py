@@ -167,6 +167,9 @@ def louvainModularityLib(file_path):
 
 if __name__ == '__main__':
     # print("Louvain Modularity without library")
+
+    # Change the file path to the location of the dataset on your machine
+
     # file_path_small = r"C:\Users\Checkout\Desktop\CS255_Project\News_Clustering_Comparisons\Dataset\sample_small.csv"
     # louvain_modularity_wrapper(file_path_small)
     print("Louvain Modularity with library")
