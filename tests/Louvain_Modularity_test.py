@@ -1,12 +1,9 @@
 # test_louvain_modularity.py
 import pytest
-from src.Louvain_Modularity import louvainModularity, louvainModularityLib
+from News_Clustering_Comparisons.src.Leiden_Modularity import louvainModularity, louvainModularityLib
 
 @pytest.fixture
 def sample_data():
-    # You might need to create a sample dataset for testing
-    # Ensure this data aligns with the expected format in your code
-    # Example: return {'Index': [1, 2, 3], 'Headline': ['...', '...', '...'], ...}
     pass
 
 def test_louvain_modularity(sample_data, capsys):
