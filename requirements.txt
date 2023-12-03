@@ -1,0 +1,8 @@
+pytest
+leidenalg
+python-louvain
+pandas
+sklearn
+matplotlib
+networkx
+time
