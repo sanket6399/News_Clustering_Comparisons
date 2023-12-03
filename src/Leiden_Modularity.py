@@ -21,8 +21,10 @@ def create_networkx_graph(cosine_sim, threshold):
     '''Create NetworkX graph from cosine similarity matrix'''
 
     G = nx.Graph()
+    # Add nodes
     for i in range(len(cosine_sim)):
         for j in range(i + 1, len(cosine_sim)):
+            # the below code is to remove self similarity and similarity below threshold
             if cosine_sim[i][j] > 0.2:
                 G.add_edge(i, j, weight=cosine_sim[i][j])
     return G
@@ -32,8 +34,10 @@ def convert_to_igraph(G):
     ''' This function converts NetworkX graph to iGraph graph'''
 
     nx_matrix = nx.to_numpy_array(G)
+    # Get the row and column indices
     sources, targets = np.where(nx_matrix != 0)
     weights = nx_matrix[sources, targets]
+    # Create the iGraph graph for Leiden algorithm
     igraph_graph = ig.Graph(edges=list(zip(sources, targets)), directed=False)
     igraph_graph.es['weight'] = weights
     return igraph_graph
@@ -43,8 +47,10 @@ def apply_leiden_algorithm(igraph_graph):
     '''This function applies Leiden algorithm to the iGraph graph'''
 
     start_time = time.time()
+    # Apply Leiden algorithm
     partition = leidenalg.find_partition(igraph_graph, leidenalg.ModularityVertexPartition, weights='weight')
     end_time = time.time()
+    # Calculate time taken for Leiden algorithm
     leiden_time = -1 * (start_time - end_time)
     print("Leiden time", leiden_time)
     return partition
