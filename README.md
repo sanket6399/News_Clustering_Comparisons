@@ -29,7 +29,7 @@ This project implements a news clustering algorithm for grouping news articles b
     pip install -r requirements.txt
     ```
 
-# Usage
+## Usage
 
 1. Load your news dataset into the `Dataset` directory.
 2. Update the file path in the main function of `Louvain_Modularity.py` or `Leiden_Modularity.py` based on your dataset location.
@@ -45,11 +45,11 @@ This project implements a news clustering algorithm for grouping news articles b
     python Leiden_Modularity.py
     ```
 
-# Contributing
+## Contributing
 
 Contributions are welcome! Fork the repository, create a branch, make your changes, and submit a pull request.
 
-# License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
