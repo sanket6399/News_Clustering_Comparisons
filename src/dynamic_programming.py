@@ -151,7 +151,7 @@ def apply_spectral_clustering(G, num_clusters):
 
     return clusters
 
-def dpocg_algorithm(G, previous_degrees, existing_supernodes, theta=2, num_clusters=11):
+def dpocg_algorithm(G, previous_degrees, existing_supernodes, theta=2, num_clusters=5):
     """this method runs the dp algortihm for graph clustering """
     updated_supernodes = update_supernodes(G, previous_degrees, existing_supernodes)
     reduced_graph = reduce_graph(G, theta)
