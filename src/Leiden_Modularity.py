@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import time
+import csv
 
 def load_and_preprocess_data(file_path):
 
@@ -53,7 +54,7 @@ def apply_leiden_algorithm(igraph_graph):
     # Calculate time taken for Leiden algorithm
     leiden_time = -1 * (start_time - end_time)
     print("Leiden time", leiden_time)
-    return partition
+    return partition, leiden_time
 
 def plot_clusters(clusters, G):
 
@@ -96,13 +97,25 @@ def base_function(file_path, threshold):
     igraph_graph = convert_to_igraph(G)
 
     # Apply Leiden algorithm
-    partition = apply_leiden_algorithm(igraph_graph)
+    partition, leiden_time = apply_leiden_algorithm(igraph_graph)
     print("Partition", partition)
-
     # Plot clusters
     clusters_info = {}
     for cluster_id, nodes in enumerate(partition):
         clusters_info[cluster_id] = list(map(int, nodes))
+    output_csv = r'C:\Users\Checkout\Desktop\CS255_Project\News_Clustering_Comparisons\outputs\output_time.csv'
+    with open(output_csv, 'a', newline='') as csvfile:
+        fieldnames = ['Algorithm', 'Execution Time', 'Number of Clusters']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Check if the file is empty and write header
+        if csvfile.tell() == 0:
+            writer.writeheader()
+
+        # Write data
+        writer.writerow({'Algorithm': 'Leiden', 'Execution Time': leiden_time, 'Number of Clusters': len(clusters_info)})
+    print("Writing complete for Leiden")
+
     plot_clusters(clusters_info, G)
 
 if __name__ == '__main__':

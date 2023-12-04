@@ -5,6 +5,7 @@ import community.community_louvain as community_louvain
 import matplotlib.pyplot as plt
 import pandas as pd
 import time
+import csv
 
 def load_and_preprocess_data(file_path):
 
@@ -36,7 +37,6 @@ def create_graph(data, threshold):
 def louvain_modularity_optimized(G):
 
     '''This function is used to Louvain Modularity Optimized'''
-
     A_sparse = nx.adjacency_matrix(G)
     m = G.size(weight='weight')
     degrees = dict(G.degree(weight='weight'))
@@ -118,20 +118,20 @@ def plot_clusters(clusters, G):
         i += 1
         plt.show()
 
-def louvain_modularity_wrapper(file_path, threshold = 0.32):
+def louvain_modularity_wrapper(file_path, threshold = 0.3):
 
     '''This function is used as a Wrapper for Louvain Modularity without library'''
 
-    start_time = time.time()
+    start_lib_time = time.time()
     # Load and preprocess data
     data = load_and_preprocess_data(file_path)
     G = create_graph(data, threshold)
     # Apply Louvain algorithm
     partition_optimized = louvain_modularity_optimized(G)
 
-    end_time = time.time()
-    louvain_time = -1 * (start_time - end_time)
-    print("Louvain time", louvain_time)
+    end_lib_time = time.time()
+    louvain_lib_time = -1 * (start_lib_time - end_lib_time)
+    print("Louvain time", louvain_lib_time)
     print("Partition", partition_optimized)
 
     # create clusters
@@ -140,6 +140,19 @@ def louvain_modularity_wrapper(file_path, threshold = 0.32):
         if cluster_id not in clusters:
             clusters[cluster_id] = []
         clusters[cluster_id].append(node)
+
+    output_csv = r'C:\Users\Checkout\Desktop\CS255_Project\News_Clustering_Comparisons\outputs\output_louvain_imps.csv'
+    with open(output_csv, 'a', newline='') as csvfile:
+        fieldnames = ['Algorithm', 'Execution Time', 'Number of Clusters']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Check if the file is empty and write header
+        if csvfile.tell() == 0:
+            writer.writeheader()
+
+        # Write data
+        writer.writerow({'Algorithm': 'Louvain w/o lib', 'Execution Time': louvain_lib_time, 'Number of Clusters': len(clusters)})
+    print("Writing complete for Louvain w/o lib")
 
     # print("Cluster", i, ":", nodes)
     list(clusters.items())
@@ -151,6 +164,7 @@ def louvainModularityLib(file_path):
     '''This function is Louvain Modularity with library'''
 
     data = pd.read_csv(file_path)
+    start_time = time.time()
     # getting the columns data inside my df
     data['text'] = data['Headline'] + " " + data['Description'] + " " + data['Article text']
     tfidf_vectorizer = TfidfVectorizer()
@@ -173,12 +187,26 @@ def louvainModularityLib(file_path):
     # Apply Louvain algorithm
     partition = community_louvain.best_partition(G)
     clusters = {}
-
+    end_time = time.time()
+    louvain_time = -1 * (start_time - end_time)
     # create clusters
     for node, cluster_id in partition.items():
         if cluster_id not in clusters:
             clusters[cluster_id] = []
         clusters[cluster_id].append(node)
+
+    output_csv = r'C:\Users\Checkout\Desktop\CS255_Project\News_Clustering_Comparisons\outputs\output_louvain_imps.csv'
+    with open(output_csv, 'a', newline='') as csvfile:
+        fieldnames = ['Algorithm', 'Execution Time', 'Number of Clusters']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Check if the file is empty and write header
+        if csvfile.tell() == 0:
+            writer.writeheader()
+
+        # Write data
+        writer.writerow({'Algorithm': 'Louvain', 'Execution Time': louvain_time, 'Number of Clusters': len(clusters)})
+    print("Writing complete for Louvain")
 
     # print("Cluster", i, ":", nodes)
     list(clusters.items())
@@ -188,7 +216,7 @@ def louvainModularityLib(file_path):
 if __name__ == '__main__':
     # print("Louvain Modularity without library")
 
-    # Change the file path to the location of the dataset on your machine
+    # # Change the file path to the location of the dataset on your machine
 
     # file_path_small = r"C:\Users\Checkout\Desktop\CS255_Project\News_Clustering_Comparisons\Dataset\sample_small.csv"
     # louvain_modularity_wrapper(file_path_small)
