@@ -84,7 +84,7 @@ def connect_nodes(Nodes):
 
 
 def build_initial_graph():
-    """loads data from a input csv file and builds graph to be used as input fro dp clustering algorithm"""
+    """loads data from a input csv file and builds graph to be used as input for dp clustering algorithm"""
     data = load_data("/ip.csv")
     Node_list = []
     for i in range(0, len(data)):
@@ -151,7 +151,7 @@ def apply_spectral_clustering(G, num_clusters):
 
     return clusters
 
-def dpocg_algorithm(G, previous_degrees, existing_supernodes, theta=2, num_clusters=5):
+def dpocg_algorithm(G, previous_degrees, existing_supernodes, theta=2, num_clusters=17):
     """this method runs the dp algortihm for graph clustering """
     updated_supernodes = update_supernodes(G, previous_degrees, existing_supernodes)
     reduced_graph = reduce_graph(G, theta)
